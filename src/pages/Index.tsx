@@ -6,6 +6,8 @@ import InvestmentForm from '../components/InvestmentForm';
 import PriorityList from '../components/PriorityList';
 import Backlog from '../components/Backlog';
 import BudgetOverview from '../components/BudgetOverview';
+import EditInvestmentModal from '../components/EditInvestmentModal';
+import { DragDropContext } from 'react-beautiful-dnd';
 
 const Index = () => {
   return (
@@ -30,6 +32,8 @@ const Index = () => {
               <InvestmentForm />
             </div>
           </div>
+          
+          <EditInvestmentModal />
         </main>
       </div>
     </InvestmentProvider>

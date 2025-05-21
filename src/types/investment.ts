@@ -7,10 +7,15 @@ export interface Investment {
   ongoingSupportCost: number; // per year in currency
   marketingCost: number; // in currency
   timeFrame: number; // in months
-  customerValue: number; // 1-10 scale
+  technicalFeasibility: number; // 1-10 scale
+  fiscalValueToCustomer: number; // 1-10 scale
+  marketOpportunity: number; // 1-10 scale
+  customerValue: number; // average of the three above
   expectedRevenue: number; // in currency
   dateAdded: Date;
   priorityScore?: number; // calculated field
+  manualPriority?: number; // for custom ordering
+  approved?: boolean; // for approved status
 }
 
 export interface BudgetInfo {

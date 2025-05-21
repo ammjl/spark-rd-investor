@@ -5,6 +5,14 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
   Form,
   FormControl,
   FormDescription,
@@ -16,12 +24,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Slider } from '@/components/ui/slider';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   DollarSign, 
   Calendar, 
   Users, 
-  FileText, 
   ArrowUp,
   Wrench,
   TrendingUp,
@@ -48,12 +54,27 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const InvestmentForm: React.FC = () => {
-  const { addInvestment } = useInvestments();
+const EditInvestmentModal: React.FC = () => {
+  const { 
+    selectedInvestment, 
+    setSelectedInvestment, 
+    updateInvestment 
+  } = useInvestments();
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
+    defaultValues: selectedInvestment ? {
+      name: selectedInvestment.name,
+      description: selectedInvestment.description,
+      developmentCost: selectedInvestment.developmentCost,
+      ongoingSupportCost: selectedInvestment.ongoingSupportCost,
+      marketingCost: selectedInvestment.marketingCost,
+      timeFrame: selectedInvestment.timeFrame,
+      technicalFeasibility: selectedInvestment.technicalFeasibility,
+      fiscalValueToCustomer: selectedInvestment.fiscalValueToCustomer,
+      marketOpportunity: selectedInvestment.marketOpportunity,
+      expectedRevenue: selectedInvestment.expectedRevenue,
+    } : {
       name: '',
       description: '',
       developmentCost: 0,
@@ -66,6 +87,23 @@ const InvestmentForm: React.FC = () => {
       expectedRevenue: 0,
     },
   });
+  
+  React.useEffect(() => {
+    if (selectedInvestment) {
+      form.reset({
+        name: selectedInvestment.name,
+        description: selectedInvestment.description,
+        developmentCost: selectedInvestment.developmentCost,
+        ongoingSupportCost: selectedInvestment.ongoingSupportCost,
+        marketingCost: selectedInvestment.marketingCost,
+        timeFrame: selectedInvestment.timeFrame,
+        technicalFeasibility: selectedInvestment.technicalFeasibility,
+        fiscalValueToCustomer: selectedInvestment.fiscalValueToCustomer,
+        marketOpportunity: selectedInvestment.marketOpportunity,
+        expectedRevenue: selectedInvestment.expectedRevenue,
+      });
+    }
+  }, [selectedInvestment, form]);
 
   const technicalFeasibility = form.watch('technicalFeasibility');
   const fiscalValueToCustomer = form.watch('fiscalValueToCustomer');
@@ -78,8 +116,10 @@ const InvestmentForm: React.FC = () => {
   );
 
   const onSubmit = (data: FormValues) => {
-    // Ensure all values are defined as required by the Investment type
-    const investment: Omit<Investment, 'id' | 'dateAdded' | 'priorityScore' | 'customerValue' | 'manualPriority' | 'approved'> = {
+    if (!selectedInvestment) return;
+    
+    const updatedInvestment: Investment = {
+      ...selectedInvestment,
       name: data.name,
       description: data.description,
       developmentCost: data.developmentCost,
@@ -89,26 +129,32 @@ const InvestmentForm: React.FC = () => {
       technicalFeasibility: data.technicalFeasibility,
       fiscalValueToCustomer: data.fiscalValueToCustomer,
       marketOpportunity: data.marketOpportunity,
-      customerValue: customerValue, // This will be recalculated in context
+      customerValue: customerValue,
       expectedRevenue: data.expectedRevenue,
     };
     
-    addInvestment(investment);
-    form.reset();
+    updateInvestment(updatedInvestment);
+    setSelectedInvestment(null);
   };
 
+  const handleClose = () => {
+    setSelectedInvestment(null);
+  };
+
+  if (!selectedInvestment) {
+    return null;
+  }
+
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="flex items-center">
-          <FileText className="mr-2 h-5 w-5" />
-          New Investment Assessment
-        </CardTitle>
-        <CardDescription>
-          Enter details about the investment opportunity to assess its priority.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+    <Dialog open={!!selectedInvestment} onOpenChange={handleClose}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Edit Investment</DialogTitle>
+          <DialogDescription>
+            Update the details of this investment.
+          </DialogDescription>
+        </DialogHeader>
+        
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-4">
@@ -357,14 +403,19 @@ const InvestmentForm: React.FC = () => {
               </div>
             </div>
             
-            <Button type="submit" className="w-full">
-              Add to Assessment
-            </Button>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={handleClose}>
+                Cancel
+              </Button>
+              <Button type="submit">
+                Save Changes
+              </Button>
+            </DialogFooter>
           </form>
         </Form>
-      </CardContent>
-    </Card>
+      </DialogContent>
+    </Dialog>
   );
 };
 
-export default InvestmentForm;
+export default EditInvestmentModal;

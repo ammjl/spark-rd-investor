@@ -24,6 +24,15 @@ export const calculatePriorityScore = (investment: Investment): number => {
   return (roi * 0.5) + (customerValueWeight * 0.3) + (timeEfficiency * 0.2);
 };
 
+// Calculate customer value as average of the three inputs
+export const calculateCustomerValue = (
+  technicalFeasibility: number,
+  fiscalValueToCustomer: number,
+  marketOpportunity: number
+): number => {
+  return Math.round((technicalFeasibility + fiscalValueToCustomer + marketOpportunity) / 3);
+};
+
 // Sort investments based on selected option
 export const sortInvestments = (
   investments: Investment[],
@@ -32,6 +41,10 @@ export const sortInvestments = (
   return [...investments].sort((a, b) => {
     switch (sortBy) {
       case SortOption.PriorityScore:
+        // First check manualPriority if available
+        if (a.manualPriority !== undefined && b.manualPriority !== undefined) {
+          return a.manualPriority - b.manualPriority;
+        }
         return (b.priorityScore || 0) - (a.priorityScore || 0);
       case SortOption.ROI:
         return calculateROI(b) - calculateROI(a);
@@ -86,4 +99,30 @@ export const getPriorityClass = (score: number): string => {
   if (score >= 0.7) return "priority-high";
   if (score >= 0.4) return "priority-medium";
   return "priority-low";
+};
+
+// Check if moving an investment from backlog to priority list would exceed budget
+export const wouldExceedBudget = (
+  investment: Investment,
+  remainingBudget: number
+): boolean => {
+  const investmentCost = investment.developmentCost + investment.marketingCost;
+  return investmentCost > remainingBudget;
+};
+
+// Reorder investments within the same list
+export const reorderInvestments = (
+  list: Investment[],
+  startIndex: number,
+  endIndex: number
+): Investment[] => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+  
+  // Update manualPriority for all items
+  return result.map((item, index) => ({
+    ...item,
+    manualPriority: index
+  }));
 };
