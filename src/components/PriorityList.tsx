@@ -1,52 +1,33 @@
-
 import React from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle 
-} from '@/components/ui/card';
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from '@/components/ui/table';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Investment, SortOption } from '../types/investment';
 import { useInvestments } from '../context/InvestmentContext';
 import { Button } from '@/components/ui/button';
 import { calculateROI, getPriorityClass } from '../utils/prioritization';
 import { ChartBar, DollarSign, Calendar, Users, ArrowUp } from 'lucide-react';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from '@/components/ui/badge';
-
 const PriorityList: React.FC = () => {
-  const { priorityList, removeInvestment, sortOption, setSortOption, budget } = useInvestments();
-
+  const {
+    priorityList,
+    removeInvestment,
+    sortOption,
+    setSortOption,
+    budget
+  } = useInvestments();
   const handleSortChange = (value: string) => {
     setSortOption(value as SortOption);
   };
-
   const formatCurrency = (amount: number) => {
     return `$${amount.toLocaleString()}`;
   };
-
-  return (
-    <Card className="w-full">
+  return <Card className="w-full">
       <CardHeader>
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <ChartBar className="mr-2 h-5 w-5" />
-            <CardTitle>Investment Priority List</CardTitle>
+            <CardTitle>Investment Theme Priority List</CardTitle>
           </div>
           <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
             {priorityList.length} investments
@@ -71,12 +52,9 @@ const PriorityList: React.FC = () => {
         </div>
       </CardHeader>
       <CardContent>
-        {priorityList.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground">
+        {priorityList.length === 0 ? <div className="text-center py-8 text-muted-foreground">
             No investments in the priority list yet. Add investments to see them here.
-          </div>
-        ) : (
-          <Table>
+          </div> : <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Investment</TableHead>
@@ -109,13 +87,11 @@ const PriorityList: React.FC = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {priorityList.map((investment) => {
-                const roi = calculateROI(investment);
-                const priorityClass = getPriorityClass(investment.priorityScore || 0);
-                const totalCost = investment.developmentCost + investment.marketingCost;
-                
-                return (
-                  <TableRow key={investment.id} className={priorityClass}>
+              {priorityList.map(investment => {
+            const roi = calculateROI(investment);
+            const priorityClass = getPriorityClass(investment.priorityScore || 0);
+            const totalCost = investment.developmentCost + investment.marketingCost;
+            return <TableRow key={investment.id} className={priorityClass}>
                     <TableCell className="font-medium">
                       <div>
                         {investment.name}
@@ -135,32 +111,20 @@ const PriorityList: React.FC = () => {
                       {roi.toFixed(1)}x
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline" className={
-                        investment.priorityScore! >= 0.7 ? "bg-green-50 text-green-700 border-green-200" :
-                        investment.priorityScore! >= 0.4 ? "bg-yellow-50 text-yellow-700 border-yellow-200" :
-                        "bg-red-50 text-red-700 border-red-200"
-                      }>
+                      <Badge variant="outline" className={investment.priorityScore! >= 0.7 ? "bg-green-50 text-green-700 border-green-200" : investment.priorityScore! >= 0.4 ? "bg-yellow-50 text-yellow-700 border-yellow-200" : "bg-red-50 text-red-700 border-red-200"}>
                         {(investment.priorityScore! * 10).toFixed(1)}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button 
-                        variant="outline"
-                        size="sm"
-                        onClick={() => removeInvestment(investment.id)}
-                      >
+                      <Button variant="outline" size="sm" onClick={() => removeInvestment(investment.id)}>
                         Remove
                       </Button>
                     </TableCell>
-                  </TableRow>
-                );
-              })}
+                  </TableRow>;
+          })}
             </TableBody>
-          </Table>
-        )}
+          </Table>}
       </CardContent>
-    </Card>
-  );
+    </Card>;
 };
-
 export default PriorityList;
