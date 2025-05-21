@@ -67,7 +67,7 @@ const InvestmentForm: React.FC = () => {
       <CardHeader>
         <CardTitle className="flex items-center">
           <FileText className="mr-2 h-5 w-5" />
-          New Investment Assessment Here
+          New Investment Assessment
         </CardTitle>
         <CardDescription>
           Enter details about the investment opportunity to assess its priority.
