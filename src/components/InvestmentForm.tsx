@@ -25,6 +25,7 @@ import {
   ArrowUp 
 } from 'lucide-react';
 import { useInvestments } from '../context/InvestmentContext';
+import { Investment } from '../types/investment';
 
 // Form schema validation
 const formSchema = z.object({
@@ -58,7 +59,19 @@ const InvestmentForm: React.FC = () => {
   });
 
   const onSubmit = (data: FormValues) => {
-    addInvestment(data);
+    // Ensure all values are defined as required by the Investment type
+    const investment: Omit<Investment, 'id' | 'dateAdded' | 'priorityScore'> = {
+      name: data.name,
+      description: data.description,
+      developmentCost: data.developmentCost,
+      ongoingSupportCost: data.ongoingSupportCost,
+      marketingCost: data.marketingCost,
+      timeFrame: data.timeFrame,
+      customerValue: data.customerValue,
+      expectedRevenue: data.expectedRevenue,
+    };
+    
+    addInvestment(investment);
     form.reset();
   };
 
