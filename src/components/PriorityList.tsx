@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -6,7 +5,7 @@ import { Investment, SortOption } from '../types/investment';
 import { useInvestments } from '../context/InvestmentContext';
 import { Button } from '@/components/ui/button';
 import { calculateROI, getPriorityClass } from '../utils/prioritization';
-import { ChartBar, DollarSign, Calendar, Users, ArrowUp, ArrowDown, Edit, MoveUp, MoveDown } from 'lucide-react';
+import { ChartBar, DollarSign, Calendar, Users, ArrowDown, Edit, MoveUp, MoveDown } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from '@/components/ui/badge';
 import BudgetExceededDialog from './BudgetExceededDialog';
@@ -44,10 +43,6 @@ const PriorityList: React.FC = () => {
 
   const handleMoveToBacklog = (investment: Investment) => {
     moveInvestment(investment.id, 'priority', 'backlog');
-    toast({
-      title: "Investment moved",
-      description: `${investment.name} has been moved to backlog.`
-    });
   };
   
   const handleMoveUp = (index: number) => {
@@ -123,7 +118,7 @@ const PriorityList: React.FC = () => {
                   </TableHead>
                   <TableHead>
                     <div className="flex items-center">
-                      <ArrowUp className="h-4 w-4 mr-1" />
+                      <ArrowDown className="h-4 w-4 mr-1" />
                       ROI
                     </div>
                   </TableHead>

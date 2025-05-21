@@ -1,7 +1,6 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Investment, BudgetInfo, SortOption } from '../types/investment';
-import { calculatePriorityScore, divideInvestments, calculateCustomerValue } from '../utils/prioritization';
+import { calculatePriorityScore, divideInvestments, calculateCustomerValue, sortInvestments } from '../utils/prioritization';
 import { toast } from "@/components/ui/use-toast";
 
 interface InvestmentContextType {
@@ -76,14 +75,17 @@ export const InvestmentProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
     // Update state
     setInvestments(investmentsWithScores);
-    setPriorityList(newPriorityList);
+    
+    // Apply sorting before setting lists
+    const sortedPriorityList = sortInvestments(newPriorityList, sortOption);
+    setPriorityList(sortedPriorityList);
     setBacklog(newBacklog);
     setBudget({
       ...budget,
       allocatedBudget,
       remainingBudget: budget.totalBudget - allocatedBudget
     });
-  }, [investments, budget.totalBudget]);
+  }, [investments, budget.totalBudget, sortOption]);
 
   const addInvestment = (newInvestment: Omit<Investment, 'id' | 'dateAdded' | 'priorityScore' | 'customerValue' | 'manualPriority' | 'approved'>) => {
     // Calculate customer value as the average of the three inputs
@@ -164,25 +166,28 @@ export const InvestmentProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         });
         return;
       }
-    }
-    
+      
+      // Update the investments array directly
+      setInvestments(prev => prev.map(inv => 
+        inv.id === investmentId ? { ...inv, approved: false } : inv
+      ));
+      
+      toast({
+        title: "Investment moved",
+        description: `${investment.name} has been moved to the priority list.`,
+      });
+    } 
     // If moving from priority list to backlog, mark as approved
-    if (fromList === 'priority' && toList === 'backlog') {
+    else if (fromList === 'priority' && toList === 'backlog') {
       setInvestments(prev => prev.map(inv => 
         inv.id === investmentId ? { ...inv, approved: true } : inv
       ));
+      
       toast({
         title: "Investment approved",
         description: `${investment.name} has been approved and moved to the backlog.`,
       });
-    } else {
-      toast({
-        title: "Investment moved",
-        description: `${investment.name} has been moved.`,
-      });
     }
-
-    // Re-calculate will happen automatically via useEffect
   };
 
   const reorderPriorityList = (startIndex: number, endIndex: number) => {
