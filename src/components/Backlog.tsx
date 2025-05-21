@@ -14,6 +14,7 @@ import { List, DollarSign, Calendar, Users, Edit, GripVertical } from 'lucide-re
 import { Badge } from '@/components/ui/badge';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import BudgetExceededDialog from './BudgetExceededDialog';
+import { Investment } from '../types/investment';
 
 const Backlog: React.FC = () => {
   const { 

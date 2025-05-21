@@ -79,7 +79,7 @@ const InvestmentForm: React.FC = () => {
 
   const onSubmit = (data: FormValues) => {
     // Ensure all values are defined as required by the Investment type
-    const investment: Omit<Investment, 'id' | 'dateAdded' | 'priorityScore' | 'customerValue' | 'manualPriority' | 'approved'> = {
+    const investment: Omit<Investment, 'id' | 'dateAdded' | 'priorityScore' | 'manualPriority' | 'approved'> = {
       name: data.name,
       description: data.description,
       developmentCost: data.developmentCost,
@@ -89,7 +89,7 @@ const InvestmentForm: React.FC = () => {
       technicalFeasibility: data.technicalFeasibility,
       fiscalValueToCustomer: data.fiscalValueToCustomer,
       marketOpportunity: data.marketOpportunity,
-      customerValue: customerValue, // This will be recalculated in context
+      customerValue: customerValue,
       expectedRevenue: data.expectedRevenue,
     };
     

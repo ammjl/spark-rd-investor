@@ -1,122 +1,156 @@
 
-import { Investment } from "../types/investment";
+import { Investment } from '../types/investment';
+import { calculateCustomerValue } from '../utils/prioritization';
 
-// Helper function to create dates in the past few weeks
-const getRandomPastDate = () => {
-  const today = new Date();
-  const daysAgo = Math.floor(Math.random() * 30) + 1; // 1-30 days ago
-  const pastDate = new Date(today);
-  pastDate.setDate(today.getDate() - daysAgo);
-  return pastDate;
+// Generate mock investments
+const generateMockInvestments = (): Omit<Investment, 'priorityScore' | 'id'>[] => {
+  return [
+    {
+      name: 'AI-Powered Chatbot',
+      description: 'Develop an intelligent customer service chatbot using machine learning',
+      developmentCost: 120000,
+      ongoingSupportCost: 15000,
+      marketingCost: 20000,
+      timeFrame: 6,
+      technicalFeasibility: 8,
+      fiscalValueToCustomer: 9,
+      marketOpportunity: 9,
+      customerValue: calculateCustomerValue(8, 9, 9),
+      expectedRevenue: 350000,
+      dateAdded: new Date('2023-05-15'),
+      approved: false,
+      manualPriority: 0
+    },
+    {
+      name: 'Mobile App Redesign',
+      description: 'Complete overhaul of mobile experience with new UI/UX',
+      developmentCost: 80000,
+      ongoingSupportCost: 10000,
+      marketingCost: 30000,
+      timeFrame: 4,
+      technicalFeasibility: 9,
+      fiscalValueToCustomer: 8,
+      marketOpportunity: 7,
+      customerValue: calculateCustomerValue(9, 8, 7),
+      expectedRevenue: 250000,
+      dateAdded: new Date('2023-04-22'),
+      approved: false,
+      manualPriority: 1
+    },
+    {
+      name: 'Cloud Migration',
+      description: 'Migrate on-premise infrastructure to cloud services',
+      developmentCost: 200000,
+      ongoingSupportCost: 5000,
+      marketingCost: 0,
+      timeFrame: 8,
+      technicalFeasibility: 7,
+      fiscalValueToCustomer: 6,
+      marketOpportunity: 8,
+      customerValue: calculateCustomerValue(7, 6, 8),
+      expectedRevenue: 400000,
+      dateAdded: new Date('2023-06-10'),
+      approved: false,
+      manualPriority: 2
+    },
+    {
+      name: 'Payment Gateway Integration',
+      description: 'Add new payment methods and improve checkout process',
+      developmentCost: 50000,
+      ongoingSupportCost: 8000,
+      marketingCost: 5000,
+      timeFrame: 3,
+      technicalFeasibility: 9,
+      fiscalValueToCustomer: 9,
+      marketOpportunity: 7,
+      customerValue: calculateCustomerValue(9, 9, 7),
+      expectedRevenue: 200000,
+      dateAdded: new Date('2023-05-28'),
+      approved: false,
+      manualPriority: 3
+    },
+    {
+      name: 'Analytics Dashboard',
+      description: 'Develop comprehensive analytics tools for business insights',
+      developmentCost: 85000,
+      ongoingSupportCost: 12000,
+      marketingCost: 8000,
+      timeFrame: 5,
+      technicalFeasibility: 8,
+      fiscalValueToCustomer: 9,
+      marketOpportunity: 8,
+      customerValue: calculateCustomerValue(8, 9, 8),
+      expectedRevenue: 220000,
+      dateAdded: new Date('2023-04-15'),
+      approved: false,
+      manualPriority: 4
+    },
+    {
+      name: 'API Modernization',
+      description: 'Upgrade and standardize API architecture',
+      developmentCost: 130000,
+      ongoingSupportCost: 18000,
+      marketingCost: 0,
+      timeFrame: 7,
+      technicalFeasibility: 6,
+      fiscalValueToCustomer: 7,
+      marketOpportunity: 8,
+      customerValue: calculateCustomerValue(6, 7, 8),
+      expectedRevenue: 300000,
+      dateAdded: new Date('2023-05-05'),
+      approved: false,
+      manualPriority: 5
+    },
+    {
+      name: 'Security Enhancement',
+      description: 'Implement advanced security features and compliance measures',
+      developmentCost: 110000,
+      ongoingSupportCost: 20000,
+      marketingCost: 5000,
+      timeFrame: 6,
+      technicalFeasibility: 8,
+      fiscalValueToCustomer: 9,
+      marketOpportunity: 6,
+      customerValue: calculateCustomerValue(8, 9, 6),
+      expectedRevenue: 150000,
+      dateAdded: new Date('2023-06-20'),
+      approved: false,
+      manualPriority: 6
+    },
+    {
+      name: 'Performance Optimization',
+      description: 'Improve system performance and response times',
+      developmentCost: 70000,
+      ongoingSupportCost: 8000,
+      marketingCost: 0,
+      timeFrame: 4,
+      technicalFeasibility: 7,
+      fiscalValueToCustomer: 8,
+      marketOpportunity: 7,
+      customerValue: calculateCustomerValue(7, 8, 7),
+      expectedRevenue: 180000,
+      dateAdded: new Date('2023-04-10'),
+      approved: false,
+      manualPriority: 7
+    },
+    {
+      name: 'Customer Portal',
+      description: 'New self-service portal for customer account management',
+      developmentCost: 90000,
+      ongoingSupportCost: 15000,
+      marketingCost: 25000,
+      timeFrame: 5,
+      technicalFeasibility: 8,
+      fiscalValueToCustomer: 9,
+      marketOpportunity: 8,
+      customerValue: calculateCustomerValue(8, 9, 8),
+      expectedRevenue: 280000,
+      dateAdded: new Date('2023-05-20'),
+      approved: false,
+      manualPriority: 8
+    },
+  ];
 };
 
-export const mockInvestments: Omit<Investment, 'id' | 'priorityScore'>[] = [
-  // High ROI, quick implementation
-  {
-    name: "API Performance Optimization",
-    description: "Improve API response times by implementing caching and query optimization",
-    developmentCost: 45000,
-    ongoingSupportCost: 5000,
-    marketingCost: 0,
-    timeFrame: 2,
-    customerValue: 8,
-    expectedRevenue: 150000,
-    dateAdded: getRandomPastDate()
-  },
-  // High customer value, medium cost
-  {
-    name: "Mobile App Redesign",
-    description: "Modernize the user interface of our mobile application to improve user experience",
-    developmentCost: 120000,
-    ongoingSupportCost: 15000,
-    marketingCost: 30000,
-    timeFrame: 4,
-    customerValue: 9,
-    expectedRevenue: 350000,
-    dateAdded: getRandomPastDate()
-  },
-  // Long-term strategic investment
-  {
-    name: "AI-Powered Recommendation Engine",
-    description: "Develop an AI system to provide personalized product recommendations",
-    developmentCost: 280000,
-    ongoingSupportCost: 45000,
-    marketingCost: 60000,
-    timeFrame: 9,
-    customerValue: 10,
-    expectedRevenue: 950000,
-    dateAdded: getRandomPastDate()
-  },
-  // Low cost, quick win
-  {
-    name: "Bug Fix Package",
-    description: "Address top 10 customer-reported bugs in the current product",
-    developmentCost: 30000,
-    ongoingSupportCost: 2000,
-    marketingCost: 0,
-    timeFrame: 1,
-    customerValue: 7,
-    expectedRevenue: 75000,
-    dateAdded: getRandomPastDate()
-  },
-  // Medium ROI, important for compliance
-  {
-    name: "Security Compliance Upgrade",
-    description: "Implement new security features to meet upcoming regulatory requirements",
-    developmentCost: 90000,
-    ongoingSupportCost: 12000,
-    marketingCost: 5000,
-    timeFrame: 3,
-    customerValue: 6,
-    expectedRevenue: 120000,
-    dateAdded: getRandomPastDate()
-  },
-  // Very expensive but potentially transformative
-  {
-    name: "Blockchain Integration Platform",
-    description: "Develop infrastructure to support blockchain-based transactions and contracts",
-    developmentCost: 350000,
-    ongoingSupportCost: 60000,
-    marketingCost: 80000,
-    timeFrame: 12,
-    customerValue: 8,
-    expectedRevenue: 1200000,
-    dateAdded: getRandomPastDate()
-  },
-  // Low cost experimental feature
-  {
-    name: "Voice Command Prototype",
-    description: "Create a prototype for voice-activated features in our product",
-    developmentCost: 35000,
-    ongoingSupportCost: 8000,
-    marketingCost: 15000,
-    timeFrame: 2,
-    customerValue: 7,
-    expectedRevenue: 100000,
-    dateAdded: getRandomPastDate()
-  },
-  // Medium cost, high customer value
-  {
-    name: "Offline Mode Implementation",
-    description: "Add capability for users to work with the application without internet connection",
-    developmentCost: 110000,
-    ongoingSupportCost: 18000,
-    marketingCost: 25000,
-    timeFrame: 5,
-    customerValue: 9,
-    expectedRevenue: 400000,
-    dateAdded: getRandomPastDate()
-  },
-  // Quick implementation, moderate return
-  {
-    name: "Dashboard Enhancement",
-    description: "Add new data visualization and reporting features to the analytics dashboard",
-    developmentCost: 60000,
-    ongoingSupportCost: 10000,
-    marketingCost: 5000,
-    timeFrame: 2,
-    customerValue: 8,
-    expectedRevenue: 150000,
-    dateAdded: getRandomPastDate()
-  }
-];
+export const mockInvestments = generateMockInvestments();
+
